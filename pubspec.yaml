@@ -1,0 +1,71 @@
+name: data_collection
+description: A new Flutter project.
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sizer: ^2.0.13
+  cupertino_icons: ^1.0.2
+  image_picker: ^0.8.4
+  xfile: ^1.1.0
+  hexcolor: ^2.0.4
+  lottie: ^1.1.0
+  provider: ^5.0.0
+  carbon_icons: ^0.0.1+2
+  path_provider:
+  path:
+  connectivity: ^3.0.6
+  snippet_coder_utils: ^1.0.6
+  shared_preferences: ^2.0.7
+  multiple_image_picker: ^0.4.8
+  geolocator: ^7.6.0
+  http: ^0.13.3
+  device_info: ^2.0.2
+  delayed_display: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+
+ 
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/lottie/
+    - assets/lottie/onComplete.json
+    - assets/lottie/on_complete.json
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Italic.ttf
+        - asset: assets/fonts/Montserrat-Light.ttf
+        - asset: assets/fonts/Montserrat-Medium.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
+        - asset: assets/fonts/Montserrat-Thin.ttf
+        - asset: assets/fonts/Montserrat-Black.ttf
+          style: normal
+    
+  
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
