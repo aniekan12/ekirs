@@ -12,6 +12,7 @@
         android:label="data_collection"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
+
         
         <activity
             android:name=".MainActivity"

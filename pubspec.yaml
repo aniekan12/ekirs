@@ -20,9 +20,8 @@ dependencies:
   path_provider:
   path:
   connectivity: ^3.0.6
-  snippet_coder_utils: ^1.0.6
+  snippet_coder_utils: ^1.0.4
   shared_preferences: ^2.0.7
-  multiple_image_picker: ^0.4.8
   geolocator: ^7.6.0
   http: ^0.13.3
   device_info: ^2.0.2

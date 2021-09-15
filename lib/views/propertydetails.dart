@@ -8,7 +8,6 @@ import 'package:data_collection/util/colors.dart';
 import 'package:data_collection/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PropertyDetails extends StatefulWidget {
