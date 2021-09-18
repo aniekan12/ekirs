@@ -654,7 +654,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                       buildingPurposeValue,
                       _userAreaClassController.text,
                       _long.toString(),
-                      _image.path.toString());
+                      _image.path);
 
                   if (response != null) {
                     print(_image.path.toString());
