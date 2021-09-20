@@ -33,7 +33,7 @@ class AuthService {
     String areaClass,
     String agentId,
     String longitude,
-    String image,
+    var image,
   ) async {
     try {
       //String fileName = image.path.split('/').last;
@@ -64,15 +64,47 @@ class AuthService {
         "mac_address": macAddress.toString(),
         "latitude": latitude.toString(),
         "longitude": longitude.toString(),
-        'image': image.toString(),
+        //'image': image.toString(),
       };
-      var response = await http
+      /*var response = await http
           .post(
               Uri.parse('https://www.ggcom.com.ng/luc/api/enumeration_api.php'),
               body: data)
-          .timeout(Duration(seconds: 60));
+          .timeout(Duration(seconds: 60));*/
+      var request = http.MultipartRequest('POST',
+          Uri.parse('https://www.ggcom.com.ng/luc/api/enumeration_api.php'));
+      request.files.add(await http.MultipartFile.fromPath('picture', image));
+      request.fields['title'] = title.toString();
+      request.fields["first_name"] = firstname.toString();
+      request.fields["middle_name"] = middlename.toString();
+      request.fields["last_name"] = lastname.toString();
+      request.fields["gender"] = gender.toString();
+      request.fields["email"] = email.toString();
+      request.fields["phone_number"] = phoneNumber.toString();
+      request.fields["occupation"] = occupation.toString();
+      request.fields["property_id"] = propertyID.toString();
+      request.fields["house_number"] = houseNumber.toString();
+      request.fields["street"] = street.toString();
+      request.fields["area"] = area.toString();
+      request.fields["landmark"] = landmark.toString();
+      request.fields["property_name"] = propertyName.toString();
+      request.fields["property_type"] = propertyType.toString();
+      request.fields["area_size"] = areaSize.toString();
+      request.fields["building_type"] = buildingType.toString();
+      request.fields["building_purpose"] = buildingPurpose.toString();
+      request.fields["category"] = category.toString();
+      request.fields["area_class"] = areaClass.toString();
+      request.fields["lga"] = lga.toString();
+      request.fields["zone"] = zone.toString();
+      request.fields["agent_id"] = agentId.toString();
+      request.fields["mac_address"] = macAddress.toString();
+      request.fields["latitude"] = latitude.toString();
+      request.fields["longitude"] = longitude.toString();
 
-      var res = response.body;
+      var res = await request.send();
+      final response = await http.Response.fromStream(res);
+      print(response.body);
+      //var res = response.body;
       print("response: $res");
       return _returnResponse(response);
     } on SocketException {
