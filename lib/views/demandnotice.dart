@@ -1,8 +1,16 @@
 import 'dart:io';
 
+import 'package:data_collection/local_db/db_helper.dart';
+import 'package:data_collection/local_db/syncronize.dart';
+import 'package:data_collection/models/demand_model.dart';
+import 'package:data_collection/models/enumeration_model.dart';
 import 'package:data_collection/util/colors.dart';
+import 'package:data_collection/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'dashboard.dart';
 
 class DemandNotice extends StatefulWidget {
   const DemandNotice({Key key}) : super(key: key);
@@ -12,10 +20,31 @@ class DemandNotice extends StatefulWidget {
 }
 
 class _DemandNoticeState extends State<DemandNotice> {
+  @override
+  void initState() {
+    super.initState();
+    demandNoticeList();
+    isInteret();
+  }
+
   final formKey = new GlobalKey<FormState>();
   // // Image variable
   File _image;
   final picker = ImagePicker();
+  File savedImg;
+  File pickedImg;
+  ImagePicker selectImg = ImagePicker();
+
+  // Text size
+  double _textSize = 14;
+
+  // Text field container height
+  double _textFieldHeight = 48;
+
+  // Text field box shadow
+  Color _textFieldShadow = Color.fromRGBO(0, 0, 0, 0.5);
+
+  TextEditingController _propertyIdController = TextEditingController();
 
   // variable to check if file was uploaded
   bool _isFileUploaded = false;
@@ -25,7 +54,9 @@ class _DemandNoticeState extends State<DemandNotice> {
     final pickedFile = dropdownValue == 'Camera'
         // ignore: deprecated_member_use
         ? await picker.getImage(source: ImageSource.camera)
+        // ignore: deprecated_member_use
         : await picker.getImage(source: ImageSource.gallery);
+    // if (pickedFile == null) return null;
 
     setState(() {
       if (pickedFile != null) {
@@ -35,78 +66,72 @@ class _DemandNoticeState extends State<DemandNotice> {
         print('No image selected.');
       }
     });
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      if (directory != null) {
+        for (int count = 1; count >= 1000000000000000000; count++) {
+          savedImg = await _image.copy('${directory.path}/filename$count.jpg');
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   String dropdownValue = 'One';
 
-  // Text field container height
-  double _textFieldHeight = 48;
-
   // Thickness of Text fields
   double _textFieldBorderWidth = 1;
 
-  // Text size
-  double _textSize = 14;
-
-  // Text field box shadow
-  Color _textFieldShadow = Color.fromRGBO(0, 0, 0, 0.5);
-
-  // variable to store if password is visible or not
-  bool _obscureText = true;
   double heightValue = 120;
+  String imgString;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  List list;
+  bool loading = true;
+  Future demandNoticeList() async {
+    list = await SqfliteDatabaseHelper.instance.readAllDemands();
+    setState(() {
+      loading = false;
+    });
+    print(list);
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+  Future isInteret() async {
+    await SyncronizationData.isInternet().then((connection) {
+      if (connection) {
+        print("Internet connection availale");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: buttonColorTwo,
+            content: Text("Internet connection available"),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text("No Internet available")));
+      }
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: [
-            Form(
-              child: _buildCameraOrFileChooser(context),
-              key: formKey,
-            ),
-          ],
-        ),
-      ),
-    );
+  Future syncToMysql() async {
+    await SyncronizationData().fetchAllDemands().then((userList) async {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Don't close app. we are syncing!")));
+      print(userList.length);
+      await SyncronizationData().saveToApIDemandWith(userList);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Saved succesfully!")));
+    });
   }
 
   _buildCameraOrFileChooser(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-          padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 24.0),
+          padding: const EdgeInsets.fromLTRB(0, 0.0, 24.0, 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40.0),
-              Text(
-                'Upload a Photo',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Divider(
-                height: 20,
-                endIndent: 140,
-                thickness: 5,
-                color: buttonColorOne,
-              ),
-              SizedBox(height: 20),
               Column(
                 children: [
                   Row(
@@ -183,13 +208,12 @@ class _DemandNoticeState extends State<DemandNotice> {
                                           ),
                                         ),
                                   iconSize: 0,
-                                  isExpanded: true,
                                   elevation: 16,
                                   focusColor: buttonColorOne,
                                   style: TextStyle(color: buttonColorTwo),
                                   /*underline: Container(
                             height: 2,
-                            color: Colors.deepPurpleAccent,
+                            color: Colors.blackAccent,
                             ),*/
                                   onChanged: (newValue) {
                                     setState(() {
@@ -197,11 +221,9 @@ class _DemandNoticeState extends State<DemandNotice> {
                                     });
                                     getImage();
                                   },
-                                  items: <String>[
-                                    'Camera',
-                                    'Upload Picture',
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
+                                  items: <String>['Camera', 'Upload Picture']
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Text(value),
@@ -216,7 +238,7 @@ class _DemandNoticeState extends State<DemandNotice> {
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
-                                _image = null;
+                                // selectImg = _image;
                                 _isFileUploaded = false;
                               });
                             },
@@ -249,5 +271,144 @@ class _DemandNoticeState extends State<DemandNotice> {
             ],
           )),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: buttonColorOne,
+        actions: [
+          IconButton(
+              icon: Icon(Icons.refresh_sharp),
+              onPressed: () async {
+                await SyncronizationData.isInternet().then((connection) {
+                  if (connection) {
+                    syncToMysql();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: buttonColorTwo,
+                        content:
+                            Text("Internet connection available, Syncing!")));
+                    print("Internet connection availale");
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => Dashboard()));
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("No Internet")));
+                  }
+                });
+              })
+        ],
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          children: [
+            Form(
+              child: _buildDemandNotice(context),
+              key: formKey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildDemandNotice(BuildContext context) {
+    return SingleChildScrollView(
+        child: Padding(
+      padding: EdgeInsets.fromLTRB(24.0, 24, 24.0, 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 40.0),
+          Text(
+            'Demand Notice',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Divider(
+            height: 20,
+            endIndent: 140,
+            thickness: 5,
+            color: buttonColorOne,
+          ),
+          SizedBox(height: 40.0),
+          textHeaders('Property Id'),
+          textSection('', _propertyIdController, 'Property Id'),
+          SizedBox(height: 20.0),
+
+          //Image.file(pickedImg),
+          _buildCameraOrFileChooser(context),
+          GestureDetector(
+              onTap: () async {
+                DemandNoticeModel demandNoticeModel = DemandNoticeModel(
+                  propertyId: _propertyIdController.text.toString(),
+                  image: _image.path,
+                );
+                print(demandNoticeModel.image);
+                await SqfliteDatabaseHelper.instance
+                    .addDemand(demandNoticeModel)
+                    .then((value) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Saved succesfully!")));
+                  print(value);
+                  demandNoticeList();
+
+                  print("success");
+                  // enumerationList();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Save not succesful!")));
+                  print("failed");
+                });
+              },
+              child: signButton(
+                  _textFieldHeight, _textFieldShadow, _textSize, 'SEND')),
+        ],
+      ),
+    ));
+  }
+
+// Component for header of respective fields
+  Padding textHeaders(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(title,
+          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500)),
+    );
+  }
+
+  Container textSection(
+      String hintText, TextEditingController controller, String title) {
+    return Container(
+        decoration: boxDecoration(),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Theme(
+            data: Theme.of(context).copyWith(primaryColor: buttonColorOne),
+            child: TextFormField(
+              controller: controller,
+              keyboardType: TextInputType.name,
+              textInputAction: TextInputAction.next,
+              decoration: buildDecorations(buttonColorOne,
+                  _textFieldBorderWidth, _textSize, hintText, false),
+              validator: (value) =>
+                  value.isNotEmpty && value.contains(new RegExp(r'^[a-zA-Z]+$'))
+                      ? null
+                      : '$title is required',
+              /*value.isEmpty ? 'Name is required' : value.contains(
+                  new RegExp(r'^[a-zA-Z\-\s]+$')) ? null : "Enter a valid name",*/
+              textAlign: TextAlign.start,
+              maxLines: 1,
+              maxLength: 20,
+              // controller: _locationNameTextController,
+            ),
+          ),
+        ));
   }
 }

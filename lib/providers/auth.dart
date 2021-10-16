@@ -1,5 +1,4 @@
 import 'package:data_collection/api/auth_service.dart';
-import 'package:data_collection/userdata/user.dart';
 import 'package:data_collection/util/appException.dart';
 import 'package:flutter/cupertino.dart';
 

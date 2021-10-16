@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'package:connectivity/connectivity.dart';
-import 'package:data_collection/views/mysplash.dart';
 import 'package:flutter/material.dart';
 
 class NoInternet extends StatefulWidget {

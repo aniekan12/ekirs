@@ -50,6 +50,7 @@ class ConnectivityProvider extends ChangeNotifier {
         isConnected = true;
       }
     } on SocketException catch (e) {
+      print(e.toString());
       isConnected = false;
     }
     return isConnected;

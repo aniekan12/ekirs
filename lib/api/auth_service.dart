@@ -1,79 +1,45 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:data_collection/util/appException.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
   Future<String> sendEnumerationData(
     String title,
-    String middlename,
-    String gender,
-    String phoneNumber,
-    String propertyID,
-    String street,
-    String landmark,
-    String propertyType,
-    String buildingType,
-    String category,
-    String lga,
-    String zone,
-    String macAddress,
-    String latitude,
     String firstname,
+    String middlename,
     String lastname,
+    String gender,
     String email,
+    String phoneNumber,
     String occupation,
+    String propertyID,
     String houseNumber,
+    String street,
     String area,
     String propertyName,
+    String propertyType,
     String areaSize,
+    String buildingType,
     String buildingPurpose,
+    String category,
     String areaClass,
+    String lga,
+    String zone,
     String agentId,
+    String macAddress,
+    String latitude,
+    String landmark,
     String longitude,
     var image,
   ) async {
     try {
-      //String fileName = image.path.split('/').last;
-      Map data = {
-        'title': title.toString(),
-        "first_name": firstname.toString(),
-        "middle_name": middlename.toString(),
-        "last_name": lastname.toString(),
-        "gender": gender.toString(),
-        "email": email.toString(),
-        "phone_number": phoneNumber.toString(),
-        "occupation": occupation.toString(),
-        "property_id": propertyID.toString(),
-        "house_number": houseNumber.toString(),
-        "street": street.toString(),
-        "area": area.toString(),
-        "landmark": landmark.toString(),
-        "property_name": propertyName.toString(),
-        "property_type": propertyType.toString(),
-        "area_size": areaSize.toString(),
-        "building_type": buildingType.toString(),
-        "building_purpose": buildingPurpose.toString(),
-        "category": category.toString(),
-        "area_class": areaClass.toString(),
-        "lga": lga.toString(),
-        "zone": zone.toString(),
-        "agent_id": agentId.toString(),
-        "mac_address": macAddress.toString(),
-        "latitude": latitude.toString(),
-        "longitude": longitude.toString(),
-        //'image': image.toString(),
-      };
-      /*var response = await http
-          .post(
-              Uri.parse('https://www.ggcom.com.ng/luc/api/enumeration_api.php'),
-              body: data)
-          .timeout(Duration(seconds: 60));*/
-      var request = http.MultipartRequest('POST',
-          Uri.parse('https://www.ggcom.com.ng/luc/api/enumeration_api.php'));
-      request.files.add(await http.MultipartFile.fromPath('picture', image));
+      var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+            'https://www.ggcom.com.ng/luc/api/enumeration_api.php',
+          ));
       request.fields['title'] = title.toString();
       request.fields["first_name"] = firstname.toString();
       request.fields["middle_name"] = middlename.toString();
@@ -88,7 +54,6 @@ class AuthService {
       request.fields["area"] = area.toString();
       request.fields["landmark"] = landmark.toString();
       request.fields["property_name"] = propertyName.toString();
-      request.fields["property_type"] = propertyType.toString();
       request.fields["area_size"] = areaSize.toString();
       request.fields["building_type"] = buildingType.toString();
       request.fields["building_purpose"] = buildingPurpose.toString();
@@ -100,13 +65,14 @@ class AuthService {
       request.fields["mac_address"] = macAddress.toString();
       request.fields["latitude"] = latitude.toString();
       request.fields["longitude"] = longitude.toString();
+      request.files.add(await http.MultipartFile.fromPath('image', image));
 
       var res = await request.send();
       final response = await http.Response.fromStream(res);
       print(response.body);
       //var res = response.body;
       print("response: $res");
-      return _returnResponse(response);
+      return returnResponse(response);
     } on SocketException {
       throw FetchDataException("No Internet connection");
     } on TimeoutException {
@@ -127,7 +93,7 @@ class AuthService {
       var res = response.body;
       print('ddasd; $res');
       //return response?.body;
-      return _returnResponse(response);
+      return returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     } on TimeoutException {
@@ -135,7 +101,7 @@ class AuthService {
     }
   }
 
-  dynamic _returnResponse(http.Response response) {
+  dynamic returnResponse(http.Response response) {
     //var result;
     var res = json.decode(json.encode(response.body.toString()));
     switch (response.statusCode) {

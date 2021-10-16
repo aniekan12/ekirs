@@ -1,12 +1,8 @@
-import 'package:data_collection/api/auth_service.dart';
 import 'package:data_collection/providers/auth.dart';
 import 'package:data_collection/providers/user_provider.dart';
 import 'package:data_collection/userdata/user.dart';
 import 'package:data_collection/util/colors.dart';
 import 'package:data_collection/util/error_handler.dart';
-import 'package:data_collection/util/shared_pref_util.dart';
-import 'package:data_collection/views/dashboard.dart';
-import 'package:data_collection/views/propertydetails.dart';
 import 'package:data_collection/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final formKey = new GlobalKey<FormState>();
   final formKeys = new GlobalKey<FormState>();
-  static const double figureHeight = 250;
 
   // Text form field controllers
   final TextEditingController _emailController = TextEditingController();
@@ -50,8 +45,6 @@ class _LoginPageState extends State<LoginPage> {
   // Text field box shadow
   Color _textFieldShadow = Color.fromRGBO(0, 0, 0, 0.5);
 
-  // TODO CHANGE TO PROVIDER
-  // Hide password
   bool _obscureText = true;
   double heightValue = 120;
   @override
@@ -93,12 +86,11 @@ class _LoginPageState extends State<LoginPage> {
                                       context))
                               : auth.loggedInStatus == Status.Error
                                   ? Center(
-                                      child: onComplete(
-                                          "Login failed",
-                                          Icons.cancel,
-                                          buttonColorOne,
-                                          heightValue,
-                                          context))
+                                      child: onFailure(
+                                      "Login failed",
+                                      Icons.cancel,
+                                      buttonColorOne,
+                                    ))
                                   : null),
                 ),
               ],
@@ -150,6 +142,8 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         // false
         print('response');
+        Future.delayed(Duration(milliseconds: 6000)).then(
+            (value) => Navigator.pushReplacementNamed(context, '/login'));
         // Error Alert dialog
         ErrorHandler().errorDialog(context, auth.failure.toString());
         //Snackbar to display error message
@@ -167,13 +161,13 @@ class _LoginPageState extends State<LoginPage> {
       return response;
     };
 
-    var loading = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CircularProgressIndicator(),
-        Text(" Authenticating ... Please wait")
-      ],
-    );
+    // var loading = Row(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: <Widget>[
+    //     CircularProgressIndicator(),
+    //     Text(" Authenticating ... Please wait")
+    //   ],
+    // );
 
     return SingleChildScrollView(
       child: Padding(
@@ -269,16 +263,23 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-            // Padding(
-            //   padding: const EdgeInsets.all(0.0),
-            //   child: Checkbox(
-            //       checkColor: Colors.white,
-            //       activeColor: buttonColorTwo,
-            //       value: auth.stayLogged,
-            //       onChanged: (bool newValue) {
-            //         stayLogged(newValue);
-            //       }),
-            // ),
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Checkbox(
+                  checkColor: Colors.white,
+                  activeColor: buttonColorOne,
+                  value: auth.stayLogged,
+                  onChanged: (bool newValue) {
+                    stayLogged(newValue);
+                  }),
+            ),
+            Expanded(
+              child: Text("Stay logged In",
+                  style: TextStyle(
+                      fontSize: _textSize,
+                      fontWeight: FontWeight.w500,
+                      color: buttonColorOne)),
+            ),
           ]),
           SizedBox(height: 40.0),
           GestureDetector(

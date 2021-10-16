@@ -1,6 +1,5 @@
 import 'package:data_collection/providers/connectivity_provider.dart';
 import 'package:data_collection/util/colors.dart';
-import 'package:data_collection/views/no_internet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -48,7 +47,7 @@ class _MySplashState extends State<MySplash> {
                     ),
                   ),
                 )
-              : NoInternet();
+              : null;
         }
         return Container(
           child: Center(

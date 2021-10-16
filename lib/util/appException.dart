@@ -1,5 +1,6 @@
 class AppException implements Exception {
   final _message;
+  // ignore: unused_field
   final _prefix;
 
   AppException([this._message, this._prefix]);

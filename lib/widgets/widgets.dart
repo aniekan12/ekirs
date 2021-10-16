@@ -1,7 +1,6 @@
 import 'package:data_collection/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:provider/provider.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:lottie/lottie.dart';
 

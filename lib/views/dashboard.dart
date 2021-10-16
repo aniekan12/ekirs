@@ -1,8 +1,10 @@
 import 'package:data_collection/util/colors.dart';
 import 'package:data_collection/views/banner.dart';
-import 'package:data_collection/views/bannertwo.dart';
 import 'package:flutter/material.dart';
 import 'package:carbon_icons/carbon_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'bannertwo.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key key}) : super(key: key);
@@ -12,6 +14,20 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  String _email;
+  _loadCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _email = (prefs.getString('email') ?? '');
+    });
+  }
+
+  @override
+  void initState() {
+    _loadCounter();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = 0;
@@ -24,7 +40,7 @@ class _DashboardState extends State<Dashboard> {
             .push(MaterialPageRoute(builder: (context) => Dashboard()));
       } else if (index == 1) {
         // Navigator.of(context)
-        //     .push(MaterialPageRoute(builder: (context) => ChatPage()));
+        //     .push(MaterialPageRoute(builder: (context) => EnumerationPage()));
       } else {
         // Navigator.of(context)
         //     .push(MaterialPageRoute(builder: (context) => ProfilePage()));
@@ -42,7 +58,7 @@ class _DashboardState extends State<Dashboard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hello,',
+                    'Hello 😀,',
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Color.fromRGBO(0, 0, 0, 1),
@@ -52,7 +68,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   Text(
-                    'There!',
+                    '$_email',
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Color.fromRGBO(0, 0, 0, 1),
@@ -98,6 +114,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
+
           BottomNavigationBarItem(
             label: '',
             icon: Container(
@@ -114,23 +131,12 @@ class _DashboardState extends State<Dashboard> {
           //   icon: Container(
           //     padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
           //     child: Icon(
-          //       CarbonIcons.chat_bot,
+          //       CarbonIcons.logout,
           //       color: Colors.white,
           //       size: 24,
           //     ),
           //   ),
           // ),
-          BottomNavigationBarItem(
-            label: '',
-            icon: Container(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-              child: Icon(
-                CarbonIcons.logout,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
-          ),
         ],
       ),
     );
