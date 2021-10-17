@@ -1,4 +1,7 @@
 import 'package:data_collection/local_db/db_helper.dart';
+import 'package:data_collection/models/enumeration_model.dart';
+import 'package:data_collection/util/colors.dart';
+import 'package:data_collection/views/enumeration_detail_page.dart';
 import 'package:data_collection/views/propertydetails.dart';
 import 'package:data_collection/widgets/enumeration_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +15,7 @@ class EnumerationPage extends StatefulWidget {
 }
 
 class _EnumerationPageState extends State<EnumerationPage> {
-  List enumerations;
+  List<EnumerationModel> enumerations;
   bool isLoading = false;
   @override
   void initState() {
@@ -20,11 +23,11 @@ class _EnumerationPageState extends State<EnumerationPage> {
     refreshEnumeration();
   }
 
-  // @override
-  // void dispose() {
-  //   SqfliteDatabaseHelper.instance.close();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    SqfliteDatabaseHelper.instance.close();
+    super.dispose();
+  }
 
   Future refreshEnumeration() async {
     setState(() => isLoading = true);
@@ -37,8 +40,9 @@ class _EnumerationPageState extends State<EnumerationPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
+          backgroundColor: buttonColorOne,
           title: Text(
-            'Notes',
+            'Enumerations',
             style: TextStyle(fontSize: 24),
           ),
           actions: [Icon(Icons.search), SizedBox(width: 12)],
@@ -70,16 +74,17 @@ class _EnumerationPageState extends State<EnumerationPage> {
         padding: EdgeInsets.all(8),
         itemCount: enumerations.length,
         staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-        crossAxisCount: 4,
+        crossAxisCount: 1,
         mainAxisSpacing: 4,
-        crossAxisSpacing: 4,
+        crossAxisSpacing: 5,
         itemBuilder: (context, index) {
           final enumerationModel = enumerations[index];
 
           return GestureDetector(
             onTap: () async {
               // await Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => NoteDetailPage(noteId: enumer.id),
+              //   builder: (context) =>
+              //       EnumerationDetailPage(enumerationId: enumerationModel.id),
               // ));
 
               refreshEnumeration();

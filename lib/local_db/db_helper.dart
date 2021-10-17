@@ -103,9 +103,9 @@ class SqfliteDatabaseHelper {
     return contactList;
   }
 
-  Future<List<dynamic>> fetchAllInfo() async {
+  Future<List<EnumerationModel>> fetchAllInfo() async {
     final db = await instance.db;
-    List<dynamic> contactList = [];
+    List<EnumerationModel> contactList = [];
     try {
       final maps =
           await db.query(SqfliteDatabaseHelper.instance.enumerationTable);

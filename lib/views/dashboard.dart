@@ -5,6 +5,7 @@ import 'package:carbon_icons/carbon_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bannertwo.dart';
+import 'enumeration_page.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key key}) : super(key: key);
@@ -39,8 +40,8 @@ class _DashboardState extends State<Dashboard> {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => Dashboard()));
       } else if (index == 1) {
-        // Navigator.of(context)
-        //     .push(MaterialPageRoute(builder: (context) => EnumerationPage()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => EnumerationPage()));
       } else {
         // Navigator.of(context)
         //     .push(MaterialPageRoute(builder: (context) => ProfilePage()));

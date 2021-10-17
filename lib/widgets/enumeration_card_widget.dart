@@ -10,7 +10,7 @@ final _lightColors = [
   Colors.tealAccent.shade100
 ];
 
-class EnumerationCardWidget extends StatelessWidget {
+class EnumerationCardWidget extends StatefulWidget {
   const EnumerationCardWidget({
     Key key,
     this.enumeration,
@@ -21,10 +21,15 @@ class EnumerationCardWidget extends StatelessWidget {
   final int index;
 
   @override
+  State<EnumerationCardWidget> createState() => _EnumerationCardWidgetState();
+}
+
+class _EnumerationCardWidgetState extends State<EnumerationCardWidget> {
+  @override
   Widget build(BuildContext context) {
     /// Pick colors from the accent colors based on index
-    final color = _lightColors[index % _lightColors.length];
-    final minHeight = getMinHeight(index);
+    final color = _lightColors[widget.index % _lightColors.length];
+    final minHeight = getMinHeight(widget.index);
     return Card(
       color: color,
       child: Container(
@@ -36,11 +41,79 @@ class EnumerationCardWidget extends StatelessWidget {
           children: [
             SizedBox(height: 4),
             Text(
-              enumeration.title,
+              widget.enumeration.property_id ?? '',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 4),
+            Row(
+              children: [
+                Text(
+                  widget.enumeration.title ?? '',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  widget.enumeration.firstname ?? '',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  widget.enumeration.lastname ?? '',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              widget.enumeration.property_type ?? '',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              widget.enumeration.lga ?? '',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              widget.enumeration.phone_number ?? '',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],

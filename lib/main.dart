@@ -2,6 +2,7 @@ import 'package:data_collection/local_db/db_helper.dart';
 import 'package:data_collection/providers/connectivity_provider.dart';
 import 'package:data_collection/views/dashboard.dart';
 import 'package:data_collection/views/demandnotice.dart';
+import 'package:data_collection/views/enumeration_page.dart';
 import 'package:data_collection/views/login.dart';
 import 'package:data_collection/views/mysplash.dart';
 import 'package:data_collection/views/propertydetails.dart';
